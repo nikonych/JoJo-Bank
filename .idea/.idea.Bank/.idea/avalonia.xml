@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Bank/App.axaml" value="Bank/Bank.csproj" />
+        <entry key="Bank/Views/LoginWindow.axaml" value="Bank/Bank.csproj" />
+        <entry key="Bank/Views/MainWindow.axaml" value="Bank/Bank.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

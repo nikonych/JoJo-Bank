@@ -1,0 +1,201 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Bank.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="800"
+        x:Class="Bank.Views.MainWindow"
+        x:DataType="vm:CreditViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="Bank">
+    <Window.Styles>
+        <!-- Стиль для TabControl -->
+        <Style Selector="TabControl#VerticalTabControl">
+            <Setter Property="TabStripPlacement" Value="Left" /> <!-- Расположение вкладок слева -->
+        </Style>
+
+        <!-- Стиль для пунктов меню (TabItem) -->
+        <Style Selector="TabItem">
+            <Setter Property="Background" Value="#34495E" /> <!-- Фон для пунктов меню -->
+            <Setter Property="Foreground" Value="White" /> <!-- Цвет текста для пунктов меню -->
+            <Setter Property="Padding" Value="5" /> <!-- Отступы внутри пунктов меню -->
+        </Style>
+    </Window.Styles>
+    <TabControl Name="VerticalTabControl" Background="#34495E">
+        
+        <TabItem Header="Выдать Кредит">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Горизонтальный выбор вида кредита -->
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <RadioButton Content="Потребительский кредит" GroupName="LoanType" IsChecked="True"
+                                 Name="ConsumerLoanRadioButton" Click="LoanTypeRadioButton_Click" />
+                    <RadioButton Content="Ипотечный кредит" GroupName="LoanType" Name="MortgageLoanRadioButton"
+                                 Click="LoanTypeRadioButton_Click" />
+                    <RadioButton Content="Автокредит" GroupName="LoanType" Name="AutoLoanRadioButton"
+                                 Click="LoanTypeRadioButton_Click" />
+                    <RadioButton Content="Бизнес-кредит" GroupName="LoanType" Name="BusinessLoanRadioButton"
+                                 Click="LoanTypeRadioButton_Click" />
+                </StackPanel>
+
+                <!-- Описание кредита -->
+                <TextBlock Grid.Row="1" Name="LoanDescriptionTextBlock"
+                           Text="Потребительский кредит: Предоставляется для финансирования личных потребностей и покупок, таких как бытовая техника, электроника, отпуск, медицинские расходы и т.д. Заемщик не обязан предоставлять банку обоснование цели использования средств." />
+
+                <!-- Поля для идентификации клиента и дохода -->
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="10" /> <!-- Пространство между колонками -->
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Vertical">
+                        <TextBlock Text="Имя и Фамилия" Margin="0,0,0,5" Foreground="Gray" />
+                        <TextBox Name="FullNameTextBox" Text="{Binding FullName, Mode=TwoWay}"
+                                 Watermark="Введите имя и фамилию" Margin="0,0,0,10" />
+
+                        <TextBlock Text="Идентификационный номер клиента" Margin="0,0,0,5" Foreground="Gray" />
+                        <TextBox Name="ClientIDTextBox" Text="{Binding ClientID, Mode=TwoWay}"
+                                 Watermark="Введите идентификационный номер клиента" Margin="0,0,0,10" />
+
+                        <TextBlock Text="Доход клиента" Margin="0,0,0,5" Foreground="Gray" />
+                        <TextBox Name="IncomeTextBox" Text="{Binding Income, Mode=TwoWay}"
+                                 Watermark="Введите доход клиента" Margin="0,0,0,10" />
+
+                        <TextBlock Text="Номер телефона" Margin="0,0,0,5" Foreground="Gray" />
+                        <TextBox Name="PhoneNumberTextBox" Text="{Binding ContactInfo, Mode=TwoWay}"
+                                 Watermark="Введите номер телефона" Margin="0,0,0,10" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Vertical">
+                        <TextBlock Text="Сумма кредита" Margin="0,0,0,5" Foreground="Gray" />
+                        <TextBox Name="LoanAmountTextBox" Text="{Binding LoanAmount, Mode=TwoWay}"
+                                 Watermark="Введите сумму кредита" Margin="0,0,0,10" />
+
+                        <TextBlock Text="Срок кредита" Margin="0,0,0,5" Foreground="Gray" />
+                        <TextBox Name="LoanTermTextBox" Text="{Binding LoanTerm, Mode=TwoWay}"
+                                 Watermark="Введите срок кредита" Margin="0,0,0,10" />
+
+                        <TextBlock Text="Цель кредита" Margin="0,0,0,5" Foreground="Gray" />
+                        <TextBox Name="LoanPurposeTextBox" Text="{Binding LoanPurpose, Mode=TwoWay}"
+                                 Watermark="Введите цель кредита" Margin="0,0,0,10" />
+                        <TextBlock Name="StatusTextBox" Background="Transparent" VerticalAlignment="Center"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                </Grid>
+                <Button Grid.Row="6" Content="Очистить" Click="ClearFields_Click" />
+                <!-- ... -->
+                <TextBlock Grid.Row="3" Text="{Binding ResultText}" />
+                <Button Grid.Row="4" Content="Рассчитать" Click="Calculate_Click" />
+                <Button Grid.Row="5" Content="Выдать Кредит" Click="IssueLoan_Click" />
+            </Grid>
+            
+        </TabItem>
+
+
+        <TabItem Header="Список Пользователей">
+            <Grid Name="UsersListGrid">
+                <!-- Колонки -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+        
+                <!-- Строки -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="100"/> <!-- Меньшая высота для строк данных -->
+                    <RowDefinition Height="100"/>
+                </Grid.RowDefinitions>
+                
+                <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                    <TextBlock Text="ФИО" Margin="5"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                    <TextBlock Text="Доход" Margin="5"/>
+                </Border>
+                <Border Grid.Column="2" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                    <TextBlock Text="Контактная Информация" Margin="5"/>
+                </Border>
+                
+            </Grid>
+        </TabItem>
+        <TabItem Header="Работа с Пользователями">
+            
+        </TabItem>
+        <TabItem Header="Решения по Кредитам">
+            <Grid x:Name="CreditApplicationsGrid">
+                <!-- Определение колонок -->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Определение начальной строки для заголовков -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Заголовки -->
+                <Border Grid.Column="0" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                    <TextBlock Text="ID Заявки" Margin="5"/>
+                </Border>
+                <Border Grid.Column="1" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                    <TextBlock Text="ID Пользователя" Margin="5"/>
+                </Border>
+                <Border Grid.Column="2" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                    <TextBlock Text="Запрошенная Сумма" Margin="5"/>
+                </Border>
+                <Border Grid.Column="3" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                    <TextBlock Text="Цель Кредита" Margin="5"/>
+                </Border>
+                <Border Grid.Column="4" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                    <TextBlock Text="Статус" Margin="5"/>
+                </Border>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Управление Кредитами">
+            <StackPanel>
+                <!-- Поле для ввода ID клиента -->
+                <TextBox x:Name="ClientIdTextBox" Watermark="Введите ID клиента" Margin="5"/>
+        
+                <!-- Поле для ввода суммы платежа -->
+                <TextBox x:Name="PaymentAmountTextBox" Watermark="Введите сумму платежа" Margin="5"/>
+
+                <!-- Кнопка для выполнения расчета -->
+                <Button Content="Рассчитать" Margin="5" Click="OnCalculateButtonClick"/>
+        
+                <!-- Место для отображения результата -->
+                <TextBlock x:Name="ResultTextBlock" Margin="5"/>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="Погашение Кредитов">
+            <!-- Функции для погашения кредитов -->
+        </TabItem>
+        <TabItem Header="Расчет Процентов">
+            <!-- Интерфейс для расчета процентов по кредитам -->
+        </TabItem>
+        <TabItem Header="Мониторинг Задолженности">
+            <!-- Функционал для мониторинга и уведомлений о задолженности -->
+        </TabItem>
+        <TabItem Header="Архив">
+            <!-- Просмотр архивированных операций -->
+        </TabItem>
+    </TabControl>
+</Window>

@@ -1,0 +1,39 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="Bank.Views.LoginWindow"
+        Title="Auth">
+    <Grid Background="LightBlue">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBox Name="UsernameBox" Width="400" Margin="100, 0, 100, 10" Watermark="Имя пользователя">
+                <TextBox.Styles>
+                    <Style Selector="TextBox:focus">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="SkyBlue"/>
+                    </Style>
+                </TextBox.Styles>
+            </TextBox>
+            <TextBox Name="PasswordBox" Width="400" Margin="100, 10, 100, 100" Watermark="Пароль" PasswordChar="*">
+                <TextBox.Styles>
+                    <Style Selector="TextBox:focus">
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="Background" Value="SkyBlue"/>
+                    </Style>
+                </TextBox.Styles>
+            </TextBox>
+            <Button Width="200" Click="Login_Click" HorizontalAlignment="Center">
+                <Button.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="Background" Value="SkyBlue"/>
+                        <Setter Property="BorderBrush" Value="SkyBlue"/>
+                        <Setter Property="Foreground" Value="White"/>
+                    </Style>
+                </Button.Styles>
+                <Button.Content>
+                    <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">Войти</TextBlock>
+                </Button.Content>
+            </Button>
+
+            <TextBlock Name="ErrorTextBlock" Foreground="Red" IsVisible="False" HorizontalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>
