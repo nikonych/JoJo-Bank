@@ -50,11 +50,25 @@ public partial class MainWindow : Window
                 CreditApplicationsGrid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
                 // Для каждого поля заявки
-                AddTextBlockToGrid1(applications[i].ApplicationId, i + 1, 0);
+                AddTextBlockToGrid1(applications[i].ApplicationId.ToString(), i + 1, 0);
                 AddTextBlockToGrid1(applications[i].UserId, i + 1, 1);
                 AddTextBlockToGrid1(applications[i].RequestedAmount, i + 1, 2);
                 AddTextBlockToGrid1(applications[i].Purpose, i + 1, 3);
                 AddTextBlockToGrid1(applications[i].Status, i + 1, 4);
+                
+                // Add "Approve" Button
+                var approveButton = new Button { Content = "Одобрить" };
+                approveButton.Click += (sender, e) => ApproveApplication(applications[i].ApplicationId);
+                Grid.SetColumn(approveButton, 5);
+                Grid.SetRow(approveButton, i + 1);
+                CreditApplicationsGrid.Children.Add(approveButton);
+
+                // Add "Reject" Button
+                var rejectButton = new Button { Content = "Отклонить" };
+                rejectButton.Click += (sender, e) => RejectApplication(applications[i].ApplicationId);
+                Grid.SetColumn(rejectButton, 6);
+                Grid.SetRow(rejectButton, i + 1);
+                CreditApplicationsGrid.Children.Add(rejectButton);
             }
         }
 
@@ -84,7 +98,16 @@ public partial class MainWindow : Window
         Grid.SetColumn(border, column);
         UsersListGrid.Children.Add(border);
     }
+    
+    private void ApproveApplication(int applicationId)
+    {
+        
+    }
 
+    private void RejectApplication(int applicationId)
+    {
+        // Logic to reject the application
+    }
 
     private void ShowMessage(bool status)
     {

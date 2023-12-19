@@ -206,7 +206,7 @@ public class DatabaseManager
                 {
                     while (reader.Read())
                     {
-                        string applicationId = reader["applicationid"].ToString();
+                        int applicationId = (int)reader["applicationid"];
                         string userId = reader["userid"].ToString();
                         string requestedAmount = reader["requestedamount"].ToString();
                         string purpose = reader["purpose"].ToString();
@@ -303,6 +303,126 @@ public class DatabaseManager
             }
         }
     }
+    
+    public bool ApproveCreditApplication(int applicationId, int employeeId, decimal approvedAmount, decimal interestRate, int term)
+    {
+        try
+        {
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new NpgsqlCommand(@"
+                UPDATE CreditApplications
+                SET status = 'Одобрено'
+                WHERE applicationid = @applicationId", connection))
+                {
+                    command.Parameters.AddWithValue("@applicationId", applicationId);
+                    var result = command.ExecuteNonQuery();
+                    if (result > 0)
+                    {
+                        // If the application status is updated successfully, handle the approved application
+                        HandleApprovedCreditApplication(applicationId, employeeId, approvedAmount, interestRate, term);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+
+
+            }
+            
+            
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при обновлении статуса заявки: {ex.Message}");
+            return false;
+        }
+    }
+    
+    
+    public bool RejectCreditApplication(int applicationId)
+    {
+        try
+        {
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var command = new NpgsqlCommand(@"
+                UPDATE CreditApplications
+                SET status = 'Отклонено'
+                WHERE applicationid = @applicationId", connection))
+                {
+                    command.Parameters.AddWithValue("@applicationId", applicationId);
+                    var result = command.ExecuteNonQuery();
+                    return result > 0; // Return true if the status was updated
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при обновлении статуса заявки: {ex.Message}");
+            return false;
+        }
+    }
+    
+    
+    public void HandleApprovedCreditApplication(int applicationId, int employeeId, decimal approvedAmount, decimal interestRate, int term)
+{
+    using (var connection = new NpgsqlConnection(connectionString))
+    {
+        connection.Open();
+
+        // Begin a transaction to ensure both inserts are treated as a single operation
+        using (var transaction = connection.BeginTransaction())
+        {
+            try
+            {
+                // Insert into CreditDecision
+                var decisionCommand = new NpgsqlCommand(@"
+                    INSERT INTO CreditDecisions (applicationId, employeeId, approvedAmount, interestRate, term)
+                    VALUES (@applicationId, @employeeId, @approvedAmount, @interestRate, @term)
+                    RETURNING decisionId", connection);
+
+                decisionCommand.Parameters.AddWithValue("@applicationId", applicationId);
+                decisionCommand.Parameters.AddWithValue("@employeeId", employeeId);
+                decisionCommand.Parameters.AddWithValue("@approvedAmount", approvedAmount);
+                decisionCommand.Parameters.AddWithValue("@interestRate", interestRate);
+                decisionCommand.Parameters.AddWithValue("@term", term);
+
+                var decisionId = decisionCommand.ExecuteScalar();
+
+                // Insert into Credit
+                var creditCommand = new NpgsqlCommand(@"
+                    INSERT INTO Credits (applicationId, amount, interestRate, term, status)
+                    VALUES (@applicationId, @amount, @interestRate, @term, @status)", connection);
+
+                creditCommand.Parameters.AddWithValue("@applicationId", applicationId);
+                creditCommand.Parameters.AddWithValue("@amount", approvedAmount);
+                creditCommand.Parameters.AddWithValue("@interestRate", interestRate);
+                creditCommand.Parameters.AddWithValue("@term", term);
+                creditCommand.Parameters.AddWithValue("@status", "активный");
+
+                creditCommand.ExecuteNonQuery();
+
+                // Commit the transaction
+                transaction.Commit();
+            }
+            catch (Exception ex)
+            {
+                // Rollback the transaction in case of an error
+                transaction.Rollback();
+                Console.WriteLine($"Ошибка при обработке одобренной кредитной заявки: {ex.Message}");
+            }
+        }
+    }
+}
+
+
 }
 
 public class UserInfo
@@ -315,7 +435,7 @@ public class UserInfo
 
 public class CreditApplication
 {
-    public string ApplicationId { get; set; }
+    public int ApplicationId { get; set; }
     public string UserId { get; set; }
     public string RequestedAmount { get; set; }
     public string Purpose { get; set; }

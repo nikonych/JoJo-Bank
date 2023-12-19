@@ -145,6 +145,8 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="2*"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/> <!-- Approve Button Column -->
+                    <ColumnDefinition Width="Auto"/> <!-- Reject Button Column -->
                 </Grid.ColumnDefinitions>
 
                 <!-- Определение начальной строки для заголовков -->
@@ -167,6 +169,12 @@
                 </Border>
                 <Border Grid.Column="4" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
                     <TextBlock Text="Статус" Margin="5"/>
+                </Border>
+                <Border Grid.Column="5" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                    <TextBlock Text="Одобрить" Margin="5"/>
+                </Border>
+                <Border Grid.Column="6" Grid.Row="0" BorderBrush="Black" BorderThickness="1">
+                    <TextBlock Text="Отклонить" Margin="5"/>
                 </Border>
             </Grid>
         </TabItem>
